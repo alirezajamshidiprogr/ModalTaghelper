@@ -1,0 +1,88 @@
+﻿@model GeneralModal.Controllers.HomeController.GenericModalModel
+
+@{
+    string modalSizeClass = Model.Size switch
+    {
+        "sm" => "modal-sm",
+        "lg" => "modal-lg",
+        "xl" => "modal-xl",
+        "xxl" => "modal-xxl",
+        _ => "" // md پیش‌فرض
+    };
+}
+
+<div class="modal fade custom-modal-fade" id="@Model.Id" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog @modalSizeClass modal-dialog-centered">
+        <div class="modal-content shadow border-0 custom-modal-content">
+
+            <!-- HEADER -->
+            @if (!string.IsNullOrEmpty(Model.HeaderHtml))
+            {
+                <div class="modal-header custom-modal-header">
+                    @Html.Raw(Model.HeaderHtml)
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            }
+            else if (!string.IsNullOrEmpty(Model.Title))
+            {
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">@Model.Title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            }
+
+            <!-- BODY -->
+            <div class="modal-body">
+                @Html.Raw(Model.BodyHtml)
+            </div>
+
+            <!-- FOOTER -->
+            @if (!string.IsNullOrEmpty(Model.FooterHtml))
+            {
+                <div class="modal-footer custom-modal-footer">
+                    @Html.Raw(Model.FooterHtml)
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    /* انیمیشن جذاب باز شدن */
+    .custom-modal-fade .modal-dialog {
+        transform: translateY(-50px);
+        opacity: 0;
+        transition: all 0.4s ease-out;
+    }
+
+    .custom-modal-fade.show .modal-dialog {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    .custom-modal-content {
+        border-radius: 12px;
+    }
+
+    .custom-modal-header {
+        background: linear-gradient(135deg, #4a90e2, #357ab8);
+        color: #fff;
+        border-bottom: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .custom-modal-body {
+        padding: 2rem;
+    }
+
+    .custom-modal-footer {
+        border-top: none;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+</style>
+

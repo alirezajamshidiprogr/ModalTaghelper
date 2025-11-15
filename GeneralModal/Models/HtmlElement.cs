@@ -19,11 +19,22 @@
         public virtual string RenderValidationAttributes()
         {
             string attrs = "";
+
+            bool hasValidation =
+                Required ||
+                MinLength.HasValue ||
+                MaxLength.HasValue ||
+                !string.IsNullOrEmpty(Pattern);
+
             if (Required) attrs += " required";
             if (MinLength.HasValue) attrs += $" minlength='{MinLength.Value}'";
             if (MaxLength.HasValue) attrs += $" maxlength='{MaxLength.Value}'";
             if (!string.IsNullOrEmpty(Pattern)) attrs += $" pattern='{Pattern}'";
             if (!string.IsNullOrEmpty(ValidationMessage)) attrs += $" title='{ValidationMessage}'";
+
+            // اگر هر نوع اعتبارسنجی فعال بود → isrequired اضافه شود
+            if (hasValidation) attrs += " isrequired='true'";
+
             return attrs;
         }
 
@@ -55,6 +66,19 @@
             return $"<input type='text' value='{Value}' {RenderAttributes()} class='{cls}' {RenderValidationAttributes()} />";
         }
     }
+    public class MultiSelect : SelectBase
+    {
+        protected override string RenderElementHtml()
+        {
+            string cls = string.IsNullOrWhiteSpace(Class) ? "form-select" : Class;
+            if (UseSelect2) cls += " select2";
+
+            string options = RenderOptions(true);
+
+            return $"<select multiple {RenderAttributes()} class='{cls}' {RenderValidationAttributes()}>{options}</select>";
+        }
+    }
+
 
     public class PasswordBox : HtmlElement
     {
@@ -79,16 +103,16 @@
         }
     }
 
-    public class Select : HtmlElement
+    public class Select : SelectBase
     {
-        public string InnerHtml { get; set; } = "";
-        public bool UseSelect2 { get; set; } = false;
-
         protected override string RenderElementHtml()
         {
             string cls = string.IsNullOrWhiteSpace(Class) ? "form-select" : Class;
             if (UseSelect2) cls += " select2";
-            return $"<select {RenderAttributes()} class='{cls}' {RenderValidationAttributes()}>{InnerHtml}</select>";
+
+            string options = RenderOptions(false);
+
+            return $"<select {RenderAttributes()} class='{cls}' {RenderValidationAttributes()}>{options}</select>";
         }
     }
 

@@ -54,9 +54,10 @@ body {
 
     /* دکمه Close */
     .modal-header .btn-close {
+        margin: 0.75rem 1rem;
         filter: brightness(1.2);
         transition: transform 0.2s, filter 0.2s;
-        cursor: default; /* غیرقابل کلیک */
+        cursor: pointer; /* ← تغییر داده شد */
     }
 
         .modal-header .btn-close:hover {
